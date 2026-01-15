@@ -114,9 +114,11 @@ const App = () => {
       const level = upgradeData[i];
       const isNextLevel = (i === startLevel + 1);
       const attemptsDone = isNextLevel ? numCurrentAttempts : 0;
-      const remainingPity = Math.max(0, level.pity - attemptsDone);
+      // Total attempts needed = pity failures + 1 guaranteed success
+      const totalAttemptsNeeded = level.pity + 1;
+      const remainingAttempts = Math.max(0, totalAttemptsNeeded - attemptsDone);
 
-      cumulativePityStones += remainingPity * level.cost;
+      cumulativePityStones += remainingAttempts * level.cost;
 
       results.push({
         ...level,
@@ -202,7 +204,7 @@ const App = () => {
                         {item.clickCost > 0 ? formatNumber(item.clickCost) : '-'}
                       </td>
                       <td className="p-4 text-right font-mono font-bold text-indigo-700 bg-indigo-50/10">
-                        {item.pity > 0 ? formatNumber(item.clickCost * item.pity) : '-'}
+                        {item.pity > 0 ? formatNumber(item.clickCost * (item.pity + 1)) : '-'}
                       </td>
                     </tr>
                   ))}
@@ -364,7 +366,7 @@ const App = () => {
                           </div>
                           <div className="mt-2 flex items-center gap-1 text-[9px] text-slate-400">
                              <Coins size={10} />
-                             <span>{t('max_price')}: {formatNumber(item.clickCost * item.pity)} Silver</span>
+                             <span>{t('max_price')}: {formatNumber(item.clickCost * (item.pity + 1))} Silver</span>
                           </div>
                         </div>
                       ))
