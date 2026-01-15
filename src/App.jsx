@@ -287,10 +287,10 @@ const App = () => {
                         <input
                           type="number"
                           value={currentAttempts}
-                          max={upgradeData[startLevel + 1].pity - 1}
+                          max={upgradeData[startLevel + 1].pity}
                           onChange={(e) => {
                             const value = e.target.value;
-                            const maxValue = upgradeData[startLevel + 1].pity - 1;
+                            const maxValue = upgradeData[startLevel + 1].pity;
                             if (value === '' || value === '-') {
                               setCurrentAttempts('');
                             } else {
