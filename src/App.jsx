@@ -220,7 +220,15 @@ const App = () => {
                       <input
                         type="number"
                         value={skyStones}
-                        onChange={(e) => setSkyStones(Math.max(0, parseInt(e.target.value) || 0))}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          if (value === '') {
+                            setSkyStones(0);
+                          } else {
+                            const parsed = parseInt(value);
+                            setSkyStones(isNaN(parsed) ? 0 : Math.max(0, parsed));
+                          }
+                        }}
                         className="w-full pl-4 pr-16 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-indigo-500 outline-none transition-all text-xl font-mono shadow-sm bg-white"
                       />
                       <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 font-medium">{t('unit_stones')}</span>
@@ -266,7 +274,16 @@ const App = () => {
                           type="number"
                           value={currentAttempts}
                           max={upgradeData[startLevel + 1].pity - 1}
-                          onChange={(e) => setCurrentAttempts(Math.min(upgradeData[startLevel + 1].pity - 1, Math.max(0, parseInt(e.target.value) || 0)))}
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            const maxValue = upgradeData[startLevel + 1].pity - 1;
+                            if (value === '') {
+                              setCurrentAttempts(0);
+                            } else {
+                              const parsed = parseInt(value);
+                              setCurrentAttempts(isNaN(parsed) ? 0 : Math.min(maxValue, Math.max(0, parsed)));
+                            }
+                          }}
                           className="w-full pl-10 pr-4 py-3 rounded-xl border border-white bg-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all text-xl font-mono shadow-sm"
                         />
                         <History className="absolute left-3 top-1/2 -translate-y-1/2 text-indigo-400" size={20} />
