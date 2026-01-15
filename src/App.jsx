@@ -76,9 +76,9 @@ const translations = {
 const App = () => {
   const [lang, setLang] = useState('th');
   const [activeTab, setActiveTab] = useState('calculator');
-  const [skyStones, setSkyStones] = useState(0);
+  const [skyStones, setSkyStones] = useState('');
   const [startLevel, setStartLevel] = useState(0);
-  const [currentAttempts, setCurrentAttempts] = useState(0);
+  const [currentAttempts, setCurrentAttempts] = useState('');
 
   const t = (key) => translations[lang][key] || key;
 
@@ -101,17 +101,19 @@ const App = () => {
 
   const handleLevelChange = (index) => {
     setStartLevel(index);
-    setCurrentAttempts(0);
+    setCurrentAttempts('');
   };
 
   const roadmapData = useMemo(() => {
     let results = [];
     let cumulativePityStones = 0;
+    const numSkyStones = parseInt(skyStones) || 0;
+    const numCurrentAttempts = parseInt(currentAttempts) || 0;
 
     for (let i = startLevel + 1; i < upgradeData.length; i++) {
       const level = upgradeData[i];
       const isNextLevel = (i === startLevel + 1);
-      const attemptsDone = isNextLevel ? currentAttempts : 0;
+      const attemptsDone = isNextLevel ? numCurrentAttempts : 0;
       const remainingPity = Math.max(0, level.pity - attemptsDone);
 
       cumulativePityStones += remainingPity * level.cost;
@@ -119,8 +121,8 @@ const App = () => {
       results.push({
         ...level,
         totalNeeded: cumulativePityStones,
-        missing: Math.max(0, cumulativePityStones - skyStones),
-        progress: Math.min(100, (skyStones / cumulativePityStones) * 100)
+        missing: Math.max(0, cumulativePityStones - numSkyStones),
+        progress: Math.min(100, (numSkyStones / cumulativePityStones) * 100)
       });
     }
     return results;
@@ -226,13 +228,21 @@ const App = () => {
                         value={skyStones}
                         onChange={(e) => {
                           const value = e.target.value;
-                          if (value === '') {
-                            setSkyStones(0);
+                          if (value === '' || value === '-') {
+                            setSkyStones('');
                           } else {
                             const parsed = parseInt(value);
-                            setSkyStones(isNaN(parsed) ? 0 : Math.max(0, parsed));
+                            if (!isNaN(parsed) && parsed >= 0) {
+                              setSkyStones(value);
+                            }
                           }
                         }}
+                        onBlur={(e) => {
+                          if (e.target.value === '' || e.target.value === '-') {
+                            setSkyStones('0');
+                          }
+                        }}
+                        placeholder="0"
                         className="w-full pl-4 pr-16 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-indigo-500 outline-none transition-all text-xl font-mono shadow-sm bg-white"
                       />
                       <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 font-medium">{t('unit_stones')}</span>
@@ -281,13 +291,21 @@ const App = () => {
                           onChange={(e) => {
                             const value = e.target.value;
                             const maxValue = upgradeData[startLevel + 1].pity - 1;
-                            if (value === '') {
-                              setCurrentAttempts(0);
+                            if (value === '' || value === '-') {
+                              setCurrentAttempts('');
                             } else {
                               const parsed = parseInt(value);
-                              setCurrentAttempts(isNaN(parsed) ? 0 : Math.min(maxValue, Math.max(0, parsed)));
+                              if (!isNaN(parsed) && parsed >= 0 && parsed <= maxValue) {
+                                setCurrentAttempts(value);
+                              }
                             }
                           }}
+                          onBlur={(e) => {
+                            if (e.target.value === '' || e.target.value === '-') {
+                              setCurrentAttempts('0');
+                            }
+                          }}
+                          placeholder="0"
                           className="w-full pl-10 pr-4 py-3 rounded-xl border border-white bg-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all text-xl font-mono shadow-sm"
                         />
                         <History className="absolute left-3 top-1/2 -translate-y-1/2 text-indigo-400" size={20} />
