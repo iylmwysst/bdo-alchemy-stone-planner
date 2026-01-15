@@ -38,6 +38,7 @@ const translations = {
     col_chance: "โอกาสสำเร็จ",
     col_cost: "น้ำบริสุทธิ์ฯ/ครั้ง",
     col_pity: "ขีดจำกัดอากริส",
+    col_avg: "ค่าเฉลี่ยครั้งที่คาด",
     col_click: "ราคา/ครั้ง",
     unit_stones: "ชิ้น",
     pity_times: "ครั้ง",
@@ -65,6 +66,7 @@ const translations = {
     col_chance: "Success Rate",
     col_cost: "Essence/Click",
     col_pity: "Agris Limit",
+    col_avg: "Avg. Expected",
     col_click: "Price/Click",
     unit_stones: "Units",
     pity_times: "Attempts",
@@ -181,6 +183,7 @@ const App = () => {
                     <th className="p-4 font-semibold text-slate-700 text-center">{t('col_chance')}</th>
                     <th className="p-4 font-semibold text-slate-700 text-center">{t('col_cost')}</th>
                     <th className="p-4 font-semibold text-slate-700 text-center">{t('col_pity')}</th>
+                    <th className="p-4 font-semibold text-slate-700 text-center">{t('col_avg')}</th>
                     <th className="p-4 font-semibold text-slate-700 text-right">{t('col_click')}</th>
                     <th className="p-4 font-semibold text-indigo-700 text-right bg-indigo-50/30">{t('max_price_total')}</th>
                   </tr>
@@ -192,6 +195,7 @@ const App = () => {
                       <td className="p-4 text-center">{item.cost > 0 ? `${(item.rate * 100).toFixed(4)}%` : '-'}</td>
                       <td className="p-4 text-center font-mono">{item.cost > 0 ? item.cost : '-'}</td>
                       <td className="p-4 text-center font-semibold text-indigo-600">{item.pity > 0 ? `${item.pity} ${t('pity_times')}` : '-'}</td>
+                      <td className="p-4 text-center font-mono text-green-600">{item.avgClicks > 0 ? `${item.avgClicks} ${t('pity_times')}` : '-'}</td>
                       <td className="p-4 text-right font-mono text-xs">
                         {item.clickCost > 0 ? formatNumber(item.clickCost) : '-'}
                       </td>
